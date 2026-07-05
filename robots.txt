@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://balasingam07.github.io/balasingam-portfolio/sitemap.xml
