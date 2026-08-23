@@ -1,11 +1,13 @@
-// Typing Animation
+// =========================
+// TYPING ANIMATION
+// =========================
 
 const words = [
-  "ECE Graduate",
-  "Software Developer",
-  "Video Editor",
-  "Game Developer",
-  "Creative Designer"
+    "ECE Graduate",
+    "Software Developer",
+    "Game Developer",
+    "3D Creator",
+    "Creative Designer"
 ];
 
 let wordIndex = 0;
@@ -14,26 +16,38 @@ let deleting = false;
 
 const typing = document.getElementById("typing");
 
-function typeEffect() {
+function typeEffect(){
 
-    let current = words[wordIndex];
+    const current = words[wordIndex];
 
     if(!deleting){
-        typing.textContent = current.substring(0,charIndex++);
+
+        typing.textContent =
+        current.substring(0,charIndex++);
+
     }else{
-        typing.textContent = current.substring(0,charIndex--);
+
+        typing.textContent =
+        current.substring(0,charIndex--);
+
     }
 
-    let speed = deleting ? 60 : 120;
+    let speed = deleting ? 60 : 110;
 
     if(!deleting && charIndex === current.length + 1){
+
         deleting = true;
         speed = 1500;
+
     }
 
     if(deleting && charIndex === 0){
+
         deleting = false;
-        wordIndex = (wordIndex + 1) % words.length;
+
+        wordIndex =
+        (wordIndex + 1) % words.length;
+
     }
 
     setTimeout(typeEffect,speed);
@@ -43,282 +57,452 @@ function typeEffect() {
 typeEffect();
 
 
-// Scroll Animation
+// =========================
+// SCROLL ANIMATION
+// =========================
 
-const observer = new IntersectionObserver((entries)=>{
+const observer =
+new IntersectionObserver(
 
-entries.forEach(entry=>{
+(entries) => {
 
-if(entry.isIntersecting){
+    entries.forEach(entry => {
 
-entry.target.style.opacity="1";
-entry.target.style.transform="translateY(0px)";
+        if(entry.isIntersecting){
 
-}
+            entry.target.classList.add("show");
 
-});
+        }
 
-},{threshold:.2});
+    });
 
-
-document.querySelectorAll("section,.card").forEach(el=>{
-
-el.style.opacity="0";
-el.style.transform="translateY(70px)";
-el.style.transition="1s";
-
-observer.observe(el);
-
+},
+{
+    threshold:0.15
 });
 
 
-// Navbar Background
+document
+.querySelectorAll(
+"section,.card,.service-card,.achievement-card,.tech-card,.certificate-card"
+)
+.forEach(el => {
+
+    el.classList.add("reveal");
+
+    observer.observe(el);
+
+});
+
+
+// =========================
+// NAVBAR
+// =========================
 
 window.addEventListener("scroll",()=>{
 
-const header=document.querySelector("header");
+    const header =
+    document.querySelector("header");
 
-if(window.scrollY>80){
+    if(window.scrollY > 80){
 
-header.style.background="rgba(0,0,0,.8)";
+        header.classList.add("scrolled");
 
-}else{
+    }else{
 
-header.style.background="rgba(0,0,0,.25)";
+        header.classList.remove("scrolled");
+
+    }
+
+});
+
+
+// =========================
+// EMAIL JS
+// =========================
+
+emailjs.init("75CANdOSFIbu57Ls9");
+
+const contactForm =
+document.getElementById("contact-form");
+
+if(contactForm){
+
+    contactForm.addEventListener(
+    "submit",
+    function(e){
+
+        e.preventDefault();
+
+        emailjs.sendForm(
+
+            "service_infc5qd",
+
+            "template_2rdn7jv",
+
+            this
+
+        )
+
+        .then(()=>{
+
+            alert(
+            "Message Sent Successfully ❤️"
+            );
+
+            this.reset();
+
+        })
+
+        .catch(()=>{
+
+            alert("Failed to Send");
+
+        });
+
+    });
 
 }
 
+
+// =========================
+// STATISTICS COUNTER
+// =========================
+
+const counters =
+document.querySelectorAll(".counter");
+
+const counterObserver =
+new IntersectionObserver(
+
+(entries,observer)=>{
+
+    entries.forEach(entry=>{
+
+        if(entry.isIntersecting){
+
+            const counter =
+            entry.target;
+
+            const target =
+            Number(counter.dataset.target);
+
+            let count = 0;
+
+            const update = ()=>{
+
+                const increment =
+                Math.max(
+                    1,
+                    Math.ceil(target / 60)
+                );
+
+                count += increment;
+
+                if(count >= target){
+
+                    counter.innerText =
+                    target + "+";
+
+                    return;
+
+                }
+
+                counter.innerText =
+                count;
+
+                setTimeout(update,30);
+
+            };
+
+            update();
+
+            observer.unobserve(counter);
+
+        }
+
+    });
+
+},
+{
+    threshold:.7
 });
-emailjs.init("75CANdOSFIbu57Ls9");
 
-document
-.getElementById("contact-form")
-.addEventListener("submit",function(e){
-
-e.preventDefault();
-
-emailjs.sendForm(
-
-"service_infc5qd",
-
-"template_2rdn7jv",
-
-this
-
-)
-
-.then(()=>{
-
-alert("Message Sent Successfully ❤️");
-
-this.reset();
-
-})
-
-.catch(()=>{
-
-alert("Failed to Send");
-
-});
-
-});
-
-// Statistics Counter
-
-const counters=document.querySelectorAll(".counter");
 
 counters.forEach(counter=>{
 
-const update=()=>{
-
-const target=+counter.getAttribute("data-target");
-
-const count=+counter.innerText;
-
-const increment=target/80;
-
-if(count<target){
-
-counter.innerText=Math.ceil(count+increment);
-
-setTimeout(update,20);
-
-}else{
-
-counter.innerText=target+"+";
-
-}
-
-}
-
-update();
+    counterObserver.observe(counter);
 
 });
 
 
+// =========================
+// MOBILE MENU
+// =========================
 
-// Mobile Menu
+const menuToggle =
+document.getElementById("menu-toggle");
 
-const menuToggle=document.getElementById("menu-toggle");
+const navMenu =
+document.querySelector("nav ul");
 
-const navMenu=document.querySelector("nav ul");
+menuToggle.onclick = ()=>{
 
-menuToggle.onclick=()=>{
+    navMenu.classList.toggle("active");
 
-navMenu.classList.toggle("active");
+    if(navMenu.classList.contains("active")){
 
-if(navMenu.classList.contains("active")){
+        menuToggle.innerHTML =
+        '<i class="fas fa-times"></i>';
 
-menuToggle.innerHTML='<i class="fas fa-times"></i>';
+    }else{
 
-}else{
+        menuToggle.innerHTML =
+        '<i class="fas fa-bars"></i>';
 
-menuToggle.innerHTML='<i class="fas fa-bars"></i>';
+    }
 
-}
+};
 
-}
 
-// Close menu after click
+document
+.querySelectorAll("nav ul li a")
+.forEach(link=>{
 
-document.querySelectorAll("nav ul li a").forEach(link=>{
+    link.onclick = ()=>{
 
-link.onclick=()=>{
+        navMenu.classList.remove("active");
 
-navMenu.classList.remove("active");
+        menuToggle.innerHTML =
+        '<i class="fas fa-bars"></i>';
 
-menuToggle.innerHTML='<i class="fas fa-bars"></i>';
-
-}
+    };
 
 });
-// Live Clock
+
+
+// =========================
+// LIVE CLOCK
+// =========================
 
 function updateClock(){
 
-    const now = new Date();
+    const clock =
+    document.getElementById("live-clock");
 
-    const options = {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true
-    };
+    if(!clock) return;
 
-    document.getElementById("live-clock").textContent =
-        now.toLocaleTimeString("en-IN", options);
+    const now =
+    new Date();
+
+    clock.textContent =
+    now.toLocaleTimeString(
+        "en-IN",
+        {
+            hour:"2-digit",
+            minute:"2-digit",
+            second:"2-digit",
+            hour12:true
+        }
+    );
 
 }
 
 updateClock();
 
-setInterval(updateClock,1000);
+setInterval(
+    updateClock,
+    1000
+);
 
 
+// =========================
+// AI ASSISTANT
+// =========================
 
-const chatToggle=document.getElementById("chat-toggle");
-const chatBox=document.getElementById("chat-box");
-const input=document.getElementById("user-input");
-const body=document.getElementById("chat-body");
+const chatToggle =
+document.getElementById("chat-toggle");
 
-console.log(chatToggle);
-console.log(chatBox);
-console.log(input);
-console.log(body);
+const chatBox =
+document.getElementById("chat-box");
 
-chatToggle.onclick=()=>{
+const input =
+document.getElementById("user-input");
 
-chatBox.style.display=
-chatBox.style.display==="block"
-?"none":"block";
+const chatBody =
+document.getElementById("chat-body");
 
-}
 
-input.addEventListener("keypress",(e)=>{
+chatToggle.onclick = ()=>{
 
-if(e.key==="Enter"){
+    chatBox.style.display =
+    chatBox.style.display === "block"
+    ? "none"
+    : "block";
 
-const msg=input.value.trim();
+};
 
-if(msg==="") return;
 
-body.innerHTML+=`
-<div class="user-msg">${msg}</div>`;
+input.addEventListener(
+"keypress",
+(e)=>{
 
-let reply="Sorry, I don't know.";
+    if(e.key !== "Enter") return;
 
-const text=msg.toLowerCase();
+    const msg =
+    input.value.trim();
 
-if (
-    text.includes("hi") ||
-    text.includes("hello") ||
-    text.includes("hey") ||
-    text.includes("hii")
-) {
+    if(!msg) return;
 
-    reply = "👋 Hello! Welcome to Balasingam's Portfolio. How can I help you?";
 
-}
+    chatBody.innerHTML += `
 
-else if (text.includes("name")) {
+        <div class="user-msg">
+            ${msg}
+        </div>
 
-    reply = "👨‍💻 My name is Balasingam. I'm an Electronics and Communication Engineering graduate.";
+    `;
 
-}
 
-else if (text.includes("skill")) {
+    const text =
+    msg.toLowerCase();
 
-    reply = "💻 My skills include HTML, CSS, JavaScript, Video Editing, UI Design and Software Development.";
+    let reply =
+    "Sorry, I don't have information about that yet. Try asking about my skills, projects, Kumari Kandam or BS App Studio.";
 
-}
 
-else if (text.includes("project")) {
+    if(
+        text.includes("hi") ||
+        text.includes("hello") ||
+        text.includes("hey") ||
+        text.includes("hii")
+    ){
 
-    reply = "🚀 My projects include Kutty Cinema, Portfolio Website, Resume Builder and more upcoming applications.";
+        reply =
+        "👋 Hello! Welcome to Balasingam's Portfolio. How can I help you?";
 
-}
+    }
 
-else if (text.includes("contact")) {
 
-    reply = "📞 You can contact me using the Contact section or the WhatsApp button.";
+    else if(
+        text.includes("name")
+    ){
 
-}
+        reply =
+        "👨‍💻 My name is Balasingam. I'm an Electronics and Communication Engineering graduate and software & game development enthusiast.";
 
-else if (text.includes("resume") || text.includes("cv")) {
+    }
 
-    reply = "📄 Click the 'Download CV' button on the Home page.";
 
-}
+    else if(
+        text.includes("skill")
+    ){
 
-else if (text.includes("bye")) {
+        reply =
+        "💻 Balasingam's skills include Software Development, Game Development, Video Editing, Graphic Design, 3D Design, Electronics and Web Development.";
 
-    reply = "👋 Thank you for visiting my portfolio. Have a wonderful day!";
+    }
 
-}
 
-if(text.includes("skill"))
+    else if(
+        text.includes("kumari") ||
+        text.includes("kandam")
+    ){
 
-reply="Balasingam specializes in Video Editing, Web Development, Electronics and Design.";
+        reply =
+        "🌍 Kumari Kandam is Balasingam's current major game project. It is an original open-world driving simulation game featuring buses, trucks, roads, cities, villages, industries, temples and natural environments. The project is currently under process.";
 
-else if(text.includes("project"))
+    }
 
-reply="Current projects include Portfolio Website, Kutty Cinema and future Apps & Games.";
 
-else if(text.includes("contact"))
+    else if(
+        text.includes("project")
+    ){
 
-reply="Use the Contact section below or Instagram: @mr._.bs_";
+        reply =
+        "🚀 Current projects include Kumari Kandam, ResumeFlow, 3D models, applications and original game concepts.";
 
-else if(text.includes("resume"))
+    }
 
-reply="Click the Download CV button on the Home page.";
 
-body.innerHTML+=`
-<div class="bot-msg">${reply}</div>`;
+    else if(
+        text.includes("studio") ||
+        text.includes("bs app")
+    ){
 
-input.value="";
+        reply =
+        "🚀 BS App Studio is Balasingam's independent creative technology initiative focused on Games, Apps, Software, Web, 3D and Animation projects.";
 
-body.scrollTop=body.scrollHeight;
+    }
 
-}
+
+    else if(
+        text.includes("blender")
+    ){
+
+        reply =
+        "🧊 Blender is being used for 3D modelling, environments, buildings, vehicles and other assets for the Kumari Kandam project.";
+
+    }
+
+
+    else if(
+        text.includes("godot")
+    ){
+
+        reply =
+        "🎮 Godot is planned for the game simulation and interactive gameplay side of the Kumari Kandam project.";
+
+    }
+
+
+    else if(
+        text.includes("contact")
+    ){
+
+        reply =
+        "📞 You can contact Balasingam through the Contact section, phone button or WhatsApp button.";
+
+    }
+
+
+    else if(
+        text.includes("resume") ||
+        text.includes("cv")
+    ){
+
+        reply =
+        "📄 You can download Balasingam's CV using the Download CV button on the Home section.";
+
+    }
+
+
+    else if(
+        text.includes("bye")
+    ){
+
+        reply =
+        "👋 Thanks for visiting Balasingam's Portfolio. Have a great day!";
+
+    }
+
+
+    setTimeout(()=>{
+
+        chatBody.innerHTML += `
+
+            <div class="bot-msg">
+                ${reply}
+            </div>
+
+        `;
+
+        chatBody.scrollTop =
+        chatBody.scrollHeight;
+
+    },300);
+
+
+    input.value = "";
 
 });
