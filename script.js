@@ -1,13 +1,15 @@
-// =========================
-// TYPING ANIMATION
-// =========================
+/* =================================
+   TYPING ANIMATION
+================================= */
 
 const words = [
-    "ECE Graduate",
+
     "Software Developer",
     "Game Developer",
     "3D Creator",
+    "Video Editor",
     "Creative Designer"
+
 ];
 
 let wordIndex = 0;
@@ -18,37 +20,51 @@ const typing = document.getElementById("typing");
 
 function typeEffect(){
 
-    const current = words[wordIndex];
+    if(!typing) return;
+
+    const currentWord = words[wordIndex];
 
     if(!deleting){
 
         typing.textContent =
-        current.substring(0,charIndex++);
+        currentWord.substring(0,charIndex);
+
+        charIndex++;
+
+        if(charIndex > currentWord.length){
+
+            deleting = true;
+
+            setTimeout(typeEffect,1500);
+
+            return;
+
+        }
 
     }else{
 
         typing.textContent =
-        current.substring(0,charIndex--);
+        currentWord.substring(0,charIndex);
+
+        charIndex--;
+
+        if(charIndex < 0){
+
+            deleting = false;
+
+            charIndex = 0;
+
+            wordIndex++;
+
+            if(wordIndex >= words.length){
+                wordIndex = 0;
+            }
+
+        }
 
     }
 
-    let speed = deleting ? 60 : 110;
-
-    if(!deleting && charIndex === current.length + 1){
-
-        deleting = true;
-        speed = 1500;
-
-    }
-
-    if(deleting && charIndex === 0){
-
-        deleting = false;
-
-        wordIndex =
-        (wordIndex + 1) % words.length;
-
-    }
+    const speed = deleting ? 60 : 110;
 
     setTimeout(typeEffect,speed);
 
@@ -57,233 +73,63 @@ function typeEffect(){
 typeEffect();
 
 
-// =========================
-// SCROLL ANIMATION
-// =========================
+/* =================================
+   MOBILE MENU
+================================= */
 
-const observer =
-new IntersectionObserver(
+const menuToggle =
+document.getElementById("menu-toggle");
 
-(entries) => {
+const navMenu =
+document.getElementById("nav-menu");
 
-    entries.forEach(entry => {
+if(menuToggle){
 
-        if(entry.isIntersecting){
+    menuToggle.addEventListener("click",()=>{
 
-            entry.target.classList.add("show");
+        navMenu.classList.toggle("active");
+
+        const icon =
+        menuToggle.querySelector("i");
+
+        if(navMenu.classList.contains("active")){
+
+            icon.classList.remove("fa-bars");
+            icon.classList.add("fa-xmark");
+
+        }else{
+
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
 
         }
-
-    });
-
-},
-{
-    threshold:0.15
-});
-
-
-document
-.querySelectorAll(
-"section,.card,.service-card,.achievement-card,.tech-card,.certificate-card"
-)
-.forEach(el => {
-
-    el.classList.add("reveal");
-
-    observer.observe(el);
-
-});
-
-
-// =========================
-// NAVBAR
-// =========================
-
-window.addEventListener("scroll",()=>{
-
-    const header =
-    document.querySelector("header");
-
-    if(window.scrollY > 80){
-
-        header.classList.add("scrolled");
-
-    }else{
-
-        header.classList.remove("scrolled");
-
-    }
-
-});
-
-
-// =========================
-// EMAIL JS
-// =========================
-
-emailjs.init("75CANdOSFIbu57Ls9");
-
-const contactForm =
-document.getElementById("contact-form");
-
-if(contactForm){
-
-    contactForm.addEventListener(
-    "submit",
-    function(e){
-
-        e.preventDefault();
-
-        emailjs.sendForm(
-
-            "service_infc5qd",
-
-            "template_2rdn7jv",
-
-            this
-
-        )
-
-        .then(()=>{
-
-            alert(
-            "Message Sent Successfully ❤️"
-            );
-
-            this.reset();
-
-        })
-
-        .catch(()=>{
-
-            alert("Failed to Send");
-
-        });
 
     });
 
 }
 
 
-// =========================
-// STATISTICS COUNTER
-// =========================
-
-const counters =
-document.querySelectorAll(".counter");
-
-const counterObserver =
-new IntersectionObserver(
-
-(entries,observer)=>{
-
-    entries.forEach(entry=>{
-
-        if(entry.isIntersecting){
-
-            const counter =
-            entry.target;
-
-            const target =
-            Number(counter.dataset.target);
-
-            let count = 0;
-
-            const update = ()=>{
-
-                const increment =
-                Math.max(
-                    1,
-                    Math.ceil(target / 60)
-                );
-
-                count += increment;
-
-                if(count >= target){
-
-                    counter.innerText =
-                    target + "+";
-
-                    return;
-
-                }
-
-                counter.innerText =
-                count;
-
-                setTimeout(update,30);
-
-            };
-
-            update();
-
-            observer.unobserve(counter);
-
-        }
-
-    });
-
-},
-{
-    threshold:.7
-});
-
-
-counters.forEach(counter=>{
-
-    counterObserver.observe(counter);
-
-});
-
-
-// =========================
-// MOBILE MENU
-// =========================
-
-const menuToggle =
-document.getElementById("menu-toggle");
-
-const navMenu =
-document.querySelector("nav ul");
-
-menuToggle.onclick = ()=>{
-
-    navMenu.classList.toggle("active");
-
-    if(navMenu.classList.contains("active")){
-
-        menuToggle.innerHTML =
-        '<i class="fas fa-times"></i>';
-
-    }else{
-
-        menuToggle.innerHTML =
-        '<i class="fas fa-bars"></i>';
-
-    }
-
-};
-
-
-document
-.querySelectorAll("nav ul li a")
+document.querySelectorAll("#nav-menu a")
 .forEach(link=>{
 
-    link.onclick = ()=>{
+    link.addEventListener("click",()=>{
 
         navMenu.classList.remove("active");
 
-        menuToggle.innerHTML =
-        '<i class="fas fa-bars"></i>';
+        const icon =
+        menuToggle.querySelector("i");
 
-    };
+        icon.classList.remove("fa-xmark");
+        icon.classList.add("fa-bars");
+
+    });
 
 });
 
 
-// =========================
-// LIVE CLOCK
-// =========================
+/* =================================
+   LIVE CLOCK
+================================= */
 
 function updateClock(){
 
@@ -292,8 +138,7 @@ function updateClock(){
 
     if(!clock) return;
 
-    const now =
-    new Date();
+    const now = new Date();
 
     clock.textContent =
     now.toLocaleTimeString(
@@ -310,65 +155,274 @@ function updateClock(){
 
 updateClock();
 
-setInterval(
-    updateClock,
-    1000
+setInterval(updateClock,1000);
+
+
+/* =================================
+   PROJECT DETAILS
+================================= */
+
+const projectButton =
+document.getElementById("project-details-btn");
+
+const projectDetails =
+document.getElementById("project-details");
+
+if(projectButton && projectDetails){
+
+    projectButton.addEventListener("click",()=>{
+
+        projectDetails.classList.remove("hidden");
+
+        setTimeout(()=>{
+
+            projectDetails.scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+            });
+
+        },100);
+
+    });
+
+}
+
+
+/* =================================
+   SCROLL REVEAL
+================================= */
+
+const revealElements =
+document.querySelectorAll(
+    "section, .glass-card, .tech-item"
 );
 
+const revealObserver =
+new IntersectionObserver(
+    (entries)=>{
 
-// =========================
-// AI ASSISTANT
-// =========================
+        entries.forEach(entry=>{
+
+            if(entry.isIntersecting){
+
+                entry.target.classList.add("show");
+
+            }
+
+        });
+
+    },
+    {
+        threshold:.12
+    }
+);
+
+revealElements.forEach(element=>{
+
+    element.classList.add("reveal");
+
+    revealObserver.observe(element);
+
+});
+
+
+/* =================================
+   NAVBAR SCROLL
+================================= */
+
+window.addEventListener("scroll",()=>{
+
+    const header =
+    document.querySelector("header");
+
+    if(window.scrollY > 50){
+
+        header.style.background =
+        "rgba(3,3,3,.90)";
+
+    }else{
+
+        header.style.background =
+        "rgba(5,5,5,.65)";
+
+    }
+
+});
+
+
+/* =================================
+   EMAIL JS
+================================= */
+
+if(typeof emailjs !== "undefined"){
+
+    emailjs.init(
+        "75CANdOSFIbu57Ls9"
+    );
+
+}
+
+const contactForm =
+document.getElementById("contact-form");
+
+if(contactForm){
+
+    contactForm.addEventListener(
+        "submit",
+        function(event){
+
+            event.preventDefault();
+
+            const button =
+            contactForm.querySelector("button");
+
+            const originalText =
+            button.innerHTML;
+
+            button.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            button.disabled = true;
+
+            emailjs.sendForm(
+
+                "service_infc5qd",
+
+                "template_2rdn7jv",
+
+                this
+
+            )
+
+            .then(()=>{
+
+                alert(
+                    "Message sent successfully ❤️"
+                );
+
+                contactForm.reset();
+
+                button.innerHTML =
+                originalText;
+
+                button.disabled = false;
+
+            })
+
+            .catch((error)=>{
+
+                console.error(error);
+
+                alert(
+                    "Failed to send message. Please try again."
+                );
+
+                button.innerHTML =
+                originalText;
+
+                button.disabled = false;
+
+            });
+
+        }
+    );
+
+}
+
+
+/* =================================
+   AI ASSISTANT
+================================= */
 
 const chatToggle =
 document.getElementById("chat-toggle");
 
-const chatBox =
-document.getElementById("chat-box");
+const chatWindow =
+document.getElementById("chat-window");
 
-const input =
+const chatClose =
+document.getElementById("chat-close");
+
+const userInput =
 document.getElementById("user-input");
+
+const sendMessage =
+document.getElementById("send-message");
 
 const chatBody =
 document.getElementById("chat-body");
 
 
-chatToggle.onclick = ()=>{
+function openChat(){
 
-    chatBox.style.display =
-    chatBox.style.display === "block"
-    ? "none"
-    : "block";
+    chatWindow.style.display = "block";
 
-};
+}
 
 
-input.addEventListener(
-"keypress",
-(e)=>{
+function closeChat(){
 
-    if(e.key !== "Enter") return;
+    chatWindow.style.display = "none";
 
-    const msg =
-    input.value.trim();
+}
 
-    if(!msg) return;
+
+if(chatToggle){
+
+    chatToggle.addEventListener(
+        "click",
+        ()=>{
+
+            if(
+                chatWindow.style.display === "block"
+            ){
+
+                closeChat();
+
+            }else{
+
+                openChat();
+
+            }
+
+        }
+    );
+
+}
+
+
+if(chatClose){
+
+    chatClose.addEventListener(
+        "click",
+        closeChat
+    );
+
+}
+
+
+function sendChatMessage(){
+
+    const message =
+    userInput.value.trim();
+
+    if(message === "") return;
 
 
     chatBody.innerHTML += `
 
-        <div class="user-msg">
-            ${msg}
+        <div class="user-message">
+            ${escapeHTML(message)}
         </div>
 
     `;
 
 
     const text =
-    msg.toLowerCase();
+    message.toLowerCase();
 
     let reply =
-    "Sorry, I don't have information about that yet. Try asking about my skills, projects, Kumari Kandam or BS App Studio.";
+    "I'm still learning! Try asking about Balasingam, skills, projects, Kumari Kandam, BS App Studio or contact details.";
 
 
     if(
@@ -379,51 +433,39 @@ input.addEventListener(
     ){
 
         reply =
-        "👋 Hello! Welcome to Balasingam's Portfolio. How can I help you?";
+        "👋 Hello! Welcome to Balasingam's portfolio. How can I help you?";
 
     }
 
-
     else if(
-        text.includes("name")
+        text.includes("name") ||
+        text.includes("who are you")
     ){
 
         reply =
-        "👨‍💻 My name is Balasingam. I'm an Electronics and Communication Engineering graduate and software & game development enthusiast.";
+        "👨‍💻 I'm Bala AI. Balasingam is an Electronics and Communication Engineering graduate interested in software, games, 3D and creative technology.";
 
     }
 
-
     else if(
-        text.includes("skill")
+        text.includes("skill") ||
+        text.includes("skills")
     ){
 
         reply =
-        "💻 Balasingam's skills include Software Development, Game Development, Video Editing, Graphic Design, 3D Design, Electronics and Web Development.";
+        "💻 Balasingam's main skills include Software Development, Game Development, Video Editing, Creative Design and Electronics.";
 
     }
-
 
     else if(
         text.includes("kumari") ||
-        text.includes("kandam")
-    ){
-
-        reply =
-        "🌍 Kumari Kandam is Balasingam's current major game project. It is an original open-world driving simulation game featuring buses, trucks, roads, cities, villages, industries, temples and natural environments. The project is currently under process.";
-
-    }
-
-
-    else if(
         text.includes("project")
     ){
 
         reply =
-        "🚀 Current projects include Kumari Kandam, ResumeFlow, 3D models, applications and original game concepts.";
+        "🗺️ Kumari Kandam is the current project — an original fictional Tamil-inspired open-world driving simulation game currently under development.";
 
     }
-
 
     else if(
         text.includes("studio") ||
@@ -431,40 +473,9 @@ input.addEventListener(
     ){
 
         reply =
-        "🚀 BS App Studio is Balasingam's independent creative technology initiative focused on Games, Apps, Software, Web, 3D and Animation projects.";
+        "🚀 BS App Studio is Balasingam's creative technology studio focused on games, apps, software, websites, 3D and animation.";
 
     }
-
-
-    else if(
-        text.includes("blender")
-    ){
-
-        reply =
-        "🧊 Blender is being used for 3D modelling, environments, buildings, vehicles and other assets for the Kumari Kandam project.";
-
-    }
-
-
-    else if(
-        text.includes("godot")
-    ){
-
-        reply =
-        "🎮 Godot is planned for the game simulation and interactive gameplay side of the Kumari Kandam project.";
-
-    }
-
-
-    else if(
-        text.includes("contact")
-    ){
-
-        reply =
-        "📞 You can contact Balasingam through the Contact section, phone button or WhatsApp button.";
-
-    }
-
 
     else if(
         text.includes("resume") ||
@@ -476,13 +487,22 @@ input.addEventListener(
 
     }
 
+    else if(
+        text.includes("contact") ||
+        text.includes("instagram")
+    ){
+
+        reply =
+        "📞 You can use the Contact section, phone button or WhatsApp button to connect.";
+
+    }
 
     else if(
         text.includes("bye")
     ){
 
         reply =
-        "👋 Thanks for visiting Balasingam's Portfolio. Have a great day!";
+        "👋 Thanks for visiting Balasingam's portfolio. See you again!";
 
     }
 
@@ -491,7 +511,7 @@ input.addEventListener(
 
         chatBody.innerHTML += `
 
-            <div class="bot-msg">
+            <div class="bot-message">
                 ${reply}
             </div>
 
@@ -500,9 +520,56 @@ input.addEventListener(
         chatBody.scrollTop =
         chatBody.scrollHeight;
 
-    },300);
+    },350);
 
 
-    input.value = "";
+    userInput.value = "";
 
-});
+    chatBody.scrollTop =
+    chatBody.scrollHeight;
+
+}
+
+
+if(sendMessage){
+
+    sendMessage.addEventListener(
+        "click",
+        sendChatMessage
+    );
+
+}
+
+
+if(userInput){
+
+    userInput.addEventListener(
+        "keydown",
+        (event)=>{
+
+            if(event.key === "Enter"){
+
+                sendChatMessage();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =================================
+   SECURITY
+================================= */
+
+function escapeHTML(text){
+
+    const div =
+    document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
