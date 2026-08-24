@@ -1,15 +1,13 @@
-/* =================================
-   TYPING ANIMATION
-================================= */
+/* =========================
+   TYPING EFFECT
+========================= */
 
 const words = [
-
     "Software Developer",
     "Game Developer",
-    "3D Creator",
     "Video Editor",
-    "Creative Designer"
-
+    "Creative Designer",
+    "ECE Graduate"
 ];
 
 let wordIndex = 0;
@@ -27,80 +25,83 @@ function typeEffect(){
     if(!deleting){
 
         typing.textContent =
-        currentWord.substring(0,charIndex);
+            currentWord.substring(0, charIndex);
 
         charIndex++;
-
-        if(charIndex > currentWord.length){
-
-            deleting = true;
-
-            setTimeout(typeEffect,1500);
-
-            return;
-
-        }
 
     }else{
 
         typing.textContent =
-        currentWord.substring(0,charIndex);
+            currentWord.substring(0, charIndex);
 
         charIndex--;
 
-        if(charIndex < 0){
+    }
 
-            deleting = false;
 
-            charIndex = 0;
+    let speed = deleting ? 55 : 100;
 
-            wordIndex++;
 
-            if(wordIndex >= words.length){
-                wordIndex = 0;
-            }
+    if(!deleting && charIndex > currentWord.length){
+
+        deleting = true;
+
+        speed = 1500;
+
+    }
+
+
+    if(deleting && charIndex < 0){
+
+        deleting = false;
+
+        charIndex = 0;
+
+        wordIndex++;
+
+        if(wordIndex >= words.length){
+
+            wordIndex = 0;
 
         }
 
     }
 
-    const speed = deleting ? 60 : 110;
 
-    setTimeout(typeEffect,speed);
+    setTimeout(typeEffect, speed);
 
 }
 
 typeEffect();
 
 
-/* =================================
+
+/* =========================
    MOBILE MENU
-================================= */
+========================= */
 
 const menuToggle =
-document.getElementById("menu-toggle");
+    document.getElementById("menu-toggle");
 
 const navMenu =
-document.getElementById("nav-menu");
+    document.getElementById("nav-menu");
+
 
 if(menuToggle){
 
-    menuToggle.addEventListener("click",()=>{
+    menuToggle.addEventListener("click", () => {
 
         navMenu.classList.toggle("active");
 
-        const icon =
-        menuToggle.querySelector("i");
-
         if(navMenu.classList.contains("active")){
 
-            icon.classList.remove("fa-bars");
-            icon.classList.add("fa-xmark");
+            menuToggle.innerHTML =
+                '<i class="fas fa-times"></i>';
 
         }else{
 
-            icon.classList.remove("fa-xmark");
-            icon.classList.add("fa-bars");
+            menuToggle.innerHTML =
+                '<i class="fas fa-bars"></i>';
 
         }
 
@@ -109,161 +110,124 @@ if(menuToggle){
 }
 
 
-document.querySelectorAll("#nav-menu a")
-.forEach(link=>{
+/* Close mobile menu */
 
-    link.addEventListener("click",()=>{
+document
+    .querySelectorAll("#nav-menu a")
+    .forEach(link => {
 
-        navMenu.classList.remove("active");
+        link.addEventListener("click", () => {
 
-        const icon =
-        menuToggle.querySelector("i");
+            navMenu.classList.remove("active");
 
-        icon.classList.remove("fa-xmark");
-        icon.classList.add("fa-bars");
-
-    });
-
-});
-
-
-/* =================================
-   LIVE CLOCK
-================================= */
-
-function updateClock(){
-
-    const clock =
-    document.getElementById("live-clock");
-
-    if(!clock) return;
-
-    const now = new Date();
-
-    clock.textContent =
-    now.toLocaleTimeString(
-        "en-IN",
-        {
-            hour:"2-digit",
-            minute:"2-digit",
-            second:"2-digit",
-            hour12:true
-        }
-    );
-
-}
-
-updateClock();
-
-setInterval(updateClock,1000);
-
-
-/* =================================
-   PROJECT DETAILS
-================================= */
-
-const projectButton =
-document.getElementById("project-details-btn");
-
-const projectDetails =
-document.getElementById("project-details");
-
-if(projectButton && projectDetails){
-
-    projectButton.addEventListener("click",()=>{
-
-        projectDetails.classList.remove("hidden");
-
-        setTimeout(()=>{
-
-            projectDetails.scrollIntoView({
-                behavior:"smooth",
-                block:"start"
-            });
-
-        },100);
-
-    });
-
-}
-
-
-/* =================================
-   SCROLL REVEAL
-================================= */
-
-const revealElements =
-document.querySelectorAll(
-    "section, .glass-card, .tech-item"
-);
-
-const revealObserver =
-new IntersectionObserver(
-    (entries)=>{
-
-        entries.forEach(entry=>{
-
-            if(entry.isIntersecting){
-
-                entry.target.classList.add("show");
-
-            }
+            menuToggle.innerHTML =
+                '<i class="fas fa-bars"></i>';
 
         });
 
-    },
-    {
-        threshold:.12
-    }
-);
-
-revealElements.forEach(element=>{
-
-    element.classList.add("reveal");
-
-    revealObserver.observe(element);
-
-});
+    });
 
 
-/* =================================
+
+/* =========================
    NAVBAR SCROLL
-================================= */
+========================= */
 
-window.addEventListener("scroll",()=>{
+window.addEventListener("scroll", () => {
 
     const header =
-    document.querySelector("header");
+        document.querySelector("header");
 
     if(window.scrollY > 50){
 
         header.style.background =
-        "rgba(3,3,3,.90)";
+            "rgba(5,6,8,.94)";
 
     }else{
 
         header.style.background =
-        "rgba(5,5,5,.65)";
+            "rgba(5,6,8,.72)";
 
     }
 
 });
 
 
-/* =================================
-   EMAIL JS
-================================= */
 
-if(typeof emailjs !== "undefined"){
+/* =========================
+   SCROLL REVEAL
+========================= */
 
-    emailjs.init(
-        "75CANdOSFIbu57Ls9"
+const observer =
+    new IntersectionObserver(
+
+        entries => {
+
+            entries.forEach(entry => {
+
+                if(entry.isIntersecting){
+
+                    entry.target.classList.add("show");
+
+                }
+
+            });
+
+        },
+
+        {
+            threshold:0.12
+        }
+
     );
 
+
+document
+    .querySelectorAll(
+        "section, .glass-card, .skill-card, .tech-card, .project-card, .service-card, .achievement-card, .certificate-card, .timeline-item"
+    )
+    .forEach(element => {
+
+        element.style.opacity = "0";
+
+        element.style.transform =
+            "translateY(30px)";
+
+        element.style.transition =
+            "opacity .7s ease, transform .7s ease";
+
+        observer.observe(element);
+
+    });
+
+
+/* Add visible state */
+
+const revealStyle = document.createElement("style");
+
+revealStyle.innerHTML = `
+
+.show{
+    opacity:1 !important;
+    transform:translateY(0) !important;
 }
 
+`;
+
+document.head.appendChild(revealStyle);
+
+
+
+/* =========================
+   EMAILJS
+========================= */
+
+emailjs.init("75CANdOSFIbu57Ls9");
+
+
 const contactForm =
-document.getElementById("contact-form");
+    document.getElementById("contact-form");
+
 
 if(contactForm){
 
@@ -273,16 +237,6 @@ if(contactForm){
 
             event.preventDefault();
 
-            const button =
-            contactForm.querySelector("button");
-
-            const originalText =
-            button.innerHTML;
-
-            button.innerHTML =
-            '<i class="fas fa-spinner fa-spin"></i> Sending...';
-
-            button.disabled = true;
 
             emailjs.sendForm(
 
@@ -294,33 +248,21 @@ if(contactForm){
 
             )
 
-            .then(()=>{
+            .then(() => {
 
                 alert(
-                    "Message sent successfully ❤️"
+                    "Message Sent Successfully ❤️"
                 );
 
-                contactForm.reset();
-
-                button.innerHTML =
-                originalText;
-
-                button.disabled = false;
+                this.reset();
 
             })
 
-            .catch((error)=>{
-
-                console.error(error);
+            .catch(() => {
 
                 alert(
-                    "Failed to send message. Please try again."
+                    "Failed to Send Message"
                 );
-
-                button.innerHTML =
-                originalText;
-
-                button.disabled = false;
 
             });
 
@@ -330,58 +272,39 @@ if(contactForm){
 }
 
 
-/* =================================
+
+/* =========================
    AI ASSISTANT
-================================= */
+========================= */
 
 const chatToggle =
-document.getElementById("chat-toggle");
+    document.getElementById("chat-toggle");
 
-const chatWindow =
-document.getElementById("chat-window");
+const chatBox =
+    document.getElementById("chat-box");
 
-const chatClose =
-document.getElementById("chat-close");
-
-const userInput =
-document.getElementById("user-input");
-
-const sendMessage =
-document.getElementById("send-message");
+const input =
+    document.getElementById("user-input");
 
 const chatBody =
-document.getElementById("chat-body");
-
-
-function openChat(){
-
-    chatWindow.style.display = "block";
-
-}
-
-
-function closeChat(){
-
-    chatWindow.style.display = "none";
-
-}
+    document.getElementById("chat-body");
 
 
 if(chatToggle){
 
     chatToggle.addEventListener(
         "click",
-        ()=>{
+        () => {
 
-            if(
-                chatWindow.style.display === "block"
-            ){
+            if(chatBox.style.display === "block"){
 
-                closeChat();
+                chatBox.style.display = "none";
 
             }else{
 
-                openChat();
+                chatBox.style.display = "block";
+
+                input.focus();
 
             }
 
@@ -391,167 +314,183 @@ if(chatToggle){
 }
 
 
-if(chatClose){
 
-    chatClose.addEventListener(
-        "click",
-        closeChat
-    );
+if(input){
 
-}
+    input.addEventListener(
+        "keypress",
+        event => {
 
-
-function sendChatMessage(){
-
-    const message =
-    userInput.value.trim();
-
-    if(message === "") return;
+            if(event.key !== "Enter") return;
 
 
-    chatBody.innerHTML += `
-
-        <div class="user-message">
-            ${escapeHTML(message)}
-        </div>
-
-    `;
+            const message =
+                input.value.trim();
 
 
-    const text =
-    message.toLowerCase();
-
-    let reply =
-    "I'm still learning! Try asking about Balasingam, skills, projects, Kumari Kandam, BS App Studio or contact details.";
+            if(message === "") return;
 
 
-    if(
-        text.includes("hi") ||
-        text.includes("hello") ||
-        text.includes("hey") ||
-        text.includes("hii")
-    ){
+            /* User message */
 
-        reply =
-        "👋 Hello! Welcome to Balasingam's portfolio. How can I help you?";
+            chatBody.innerHTML += `
 
-    }
+                <div class="user-msg">
+                    ${escapeHTML(message)}
+                </div>
 
-    else if(
-        text.includes("name") ||
-        text.includes("who are you")
-    ){
-
-        reply =
-        "👨‍💻 I'm Bala AI. Balasingam is an Electronics and Communication Engineering graduate interested in software, games, 3D and creative technology.";
-
-    }
-
-    else if(
-        text.includes("skill") ||
-        text.includes("skills")
-    ){
-
-        reply =
-        "💻 Balasingam's main skills include Software Development, Game Development, Video Editing, Creative Design and Electronics.";
-
-    }
-
-    else if(
-        text.includes("kumari") ||
-        text.includes("project")
-    ){
-
-        reply =
-        "🗺️ Kumari Kandam is the current project — an original fictional Tamil-inspired open-world driving simulation game currently under development.";
-
-    }
-
-    else if(
-        text.includes("studio") ||
-        text.includes("bs app")
-    ){
-
-        reply =
-        "🚀 BS App Studio is Balasingam's creative technology studio focused on games, apps, software, websites, 3D and animation.";
-
-    }
-
-    else if(
-        text.includes("resume") ||
-        text.includes("cv")
-    ){
-
-        reply =
-        "📄 You can download Balasingam's CV using the Download CV button on the Home section.";
-
-    }
-
-    else if(
-        text.includes("contact") ||
-        text.includes("instagram")
-    ){
-
-        reply =
-        "📞 You can use the Contact section, phone button or WhatsApp button to connect.";
-
-    }
-
-    else if(
-        text.includes("bye")
-    ){
-
-        reply =
-        "👋 Thanks for visiting Balasingam's portfolio. See you again!";
-
-    }
+            `;
 
 
-    setTimeout(()=>{
-
-        chatBody.innerHTML += `
-
-            <div class="bot-message">
-                ${reply}
-            </div>
-
-        `;
-
-        chatBody.scrollTop =
-        chatBody.scrollHeight;
-
-    },350);
+            const text =
+                message.toLowerCase();
 
 
-    userInput.value = "";
-
-    chatBody.scrollTop =
-    chatBody.scrollHeight;
-
-}
+            let reply =
+                "Sorry, I don't know about that yet. Try asking about my skills, projects, BS App Studio or contact information.";
 
 
-if(sendMessage){
+            /* Greeting */
 
-    sendMessage.addEventListener(
-        "click",
-        sendChatMessage
-    );
+            if(
+                text.includes("hi") ||
+                text.includes("hello") ||
+                text.includes("hey") ||
+                text.includes("hii")
+            ){
 
-}
-
-
-if(userInput){
-
-    userInput.addEventListener(
-        "keydown",
-        (event)=>{
-
-            if(event.key === "Enter"){
-
-                sendChatMessage();
+                reply =
+                    "👋 Hello! Welcome to Balasingam's Portfolio. How can I help you?";
 
             }
+
+
+            /* Name */
+
+            else if(
+                text.includes("name") ||
+                text.includes("who are you")
+            ){
+
+                reply =
+                    "👨‍💻 I'm Balasingam's AI Assistant. Balasingam is an Electronics and Communication Engineering graduate and Software Developer.";
+
+            }
+
+
+            /* Skills */
+
+            else if(
+                text.includes("skill") ||
+                text.includes("skills")
+            ){
+
+                reply =
+                    "💻 Balasingam's skills include Software Development, Game Development, Video Editing, Design, 3D and Electronics.";
+
+            }
+
+
+            /* Kumari Kandam */
+
+            else if(
+                text.includes("kumari") ||
+                text.includes("game")
+            ){
+
+                reply =
+                    "🗺️ Kumari Kandam is Balasingam's current project — an original open-world driving simulation game being developed using Blender and Godot.";
+
+            }
+
+
+            /* BS App Studio */
+
+            else if(
+                text.includes("studio") ||
+                text.includes("bs app")
+            ){
+
+                reply =
+                    "🏢 BS App Studio is Balasingam's creative technology studio focused on games, apps, websites, software, 3D and digital projects.";
+
+            }
+
+
+            /* Project */
+
+            else if(
+                text.includes("project") ||
+                text.includes("projects")
+            ){
+
+                reply =
+                    "🚀 Current project: Kumari Kandam Open-World Driving Simulation. More original apps and games are planned under BS App Studio.";
+
+            }
+
+
+            /* Contact */
+
+            else if(
+                text.includes("contact") ||
+                text.includes("phone") ||
+                text.includes("whatsapp")
+            ){
+
+                reply =
+                    "📞 You can contact Balasingam using the Call, WhatsApp or Contact section on this website.";
+
+            }
+
+
+            /* Resume */
+
+            else if(
+                text.includes("resume") ||
+                text.includes("cv")
+            ){
+
+                reply =
+                    "📄 You can download the CV using the Download CV button on the Home section.";
+
+            }
+
+
+            /* Bye */
+
+            else if(
+                text.includes("bye")
+            ){
+
+                reply =
+                    "👋 Thanks for visiting Balasingam's Portfolio. See you again!";
+
+            }
+
+
+            /* Bot reply */
+
+            setTimeout(() => {
+
+                chatBody.innerHTML += `
+
+                    <div class="bot-msg">
+                        ${reply}
+                    </div>
+
+                `;
+
+                chatBody.scrollTop =
+                    chatBody.scrollHeight;
+
+            }, 350);
+
+
+            input.value = "";
+
+            chatBody.scrollTop =
+                chatBody.scrollHeight;
 
         }
     );
@@ -559,14 +498,15 @@ if(userInput){
 }
 
 
-/* =================================
-   SECURITY
-================================= */
+
+/* =========================
+   HTML ESCAPE
+========================= */
 
 function escapeHTML(text){
 
     const div =
-    document.createElement("div");
+        document.createElement("div");
 
     div.textContent = text;
 
